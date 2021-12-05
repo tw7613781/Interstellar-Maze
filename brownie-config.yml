@@ -1,0 +1,17 @@
+# require OpenZepplin Contracts
+networks:
+  default: development
+dependencies:
+  - OpenZeppelin/openzeppelin-contracts@4.3.2
+compiler:
+  evm_version: null
+  solc:
+    version: null
+    optimizer:
+      enabled: true
+      runs: 200
+    remappings:
+      - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.3.2"
+  vyper:
+    version: null
+    # path remapping to support imports from GitHub/NPM
