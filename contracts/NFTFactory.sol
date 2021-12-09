@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -14,7 +15,7 @@ contract NFTFactory is ERC721, ReentrancyGuard, Ownable {
   uint256 public constant ONE_DAY = 86400;
   uint256 public constant TOTAL_RESERVE_NFTS = 150;
   uint256 public constant DAILY_RELEASE = 333;
-  uint256 public constant START_TIME = 1639274400;
+  uint256 public constant START_TIME = 1639044000;
   uint256 private counter;
   uint256 private mintByOwner;
   mapping(address => uint256) private lockedAddress;
@@ -68,7 +69,7 @@ contract NFTFactory is ERC721, ReentrancyGuard, Ownable {
     return _totalRelease > DAILY_RELEASE * 3 ? DAILY_RELEASE * 3 : _totalRelease;
   }
 
-  function _baseURI() internal view override returns (string memory) {
+  function _baseURI() internal pure override returns (string memory) {
     return "https://www.btcart.cn/api/nft/";
   }
 }

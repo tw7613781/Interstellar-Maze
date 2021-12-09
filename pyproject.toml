@@ -5,8 +5,8 @@ description = ""
 authors = ["Tang Wei <tw7613781@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7.2"
-eth-brownie = "1.16.3"
+python = "3.9"
+eth-brownie = "1.17.2"
 
 [tool.poetry.dev-dependencies]
 
