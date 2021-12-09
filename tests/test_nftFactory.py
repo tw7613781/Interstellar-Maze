@@ -26,9 +26,9 @@ def test_release_num(nftFactory):
   print('\n')
   
   print(f'\tcurrent time: {chain.time()}')
-  with brownie.reverts('the minting is not started yet'):
+  with brownie.reverts('The minting is not started yet'):
     nftFactory.releasedNum()
-  print(f'\trevert: the minting is not started yet\n')
+  print(f'\trevert: The minting is not started yet\n')
   
   # time travel to the contract start time
   # day 1
@@ -73,9 +73,9 @@ def test_mint(nftFactory, admin, alice):
   print('\n')
   
   print(f'\tcurrent time: {chain.time()}')
-  with brownie.reverts('the minting is not started yet'):
+  with brownie.reverts('The minting is not started yet'):
     nftFactory.mint({'from':admin})
-  print(f'\trevert: the minting is not started yet\n')
+  print(f'\trevert: The minting is not started yet\n')
 
   # time travel to the contract start time
   # day 1
@@ -91,17 +91,17 @@ def test_mint(nftFactory, admin, alice):
     print(f'\turl of nft{i}: {nftFactory.tokenURI(i)}\n')
   
   # exceed owner mint limit
-  with brownie.reverts('mint more than reserved'):
+  with brownie.reverts('Mint more than reserved for owner'):
     nftFactory.mint({'from': admin})
-  print(f'\tmint exceed the owner mint limit, got error: mint more than reserved\n')
+  print(f'\tmint exceed the owner mint limit, got error: Mint more than reserved for owner\n')
 
   # normal user mint
   # day 1
   nftFactory.mint({'from': alice})
   print(f'\talice mint one nft, total {nftFactory.balanceOf(alice)} NTF')
-  with brownie.reverts('the address is mint at today'):
+  with brownie.reverts('The address has minted today'):
     nftFactory.mint({'from': alice})
-  print('\tif alice mint again at today, she will got error: the address is mint at today')
+  print('\tif alice mint again at today, she will got error: The address is minted at today')
 
   # day 2
   chain.sleep(ONE_DAY)
@@ -115,13 +115,13 @@ def test_mint(nftFactory, admin, alice):
   nftFactory.mint({'from': alice})
   print(f'\tif alice mint one day after, she can mint again, total {nftFactory.balanceOf(alice)} NFTs')
 
-  with brownie.reverts('one address can only mint 3 nfts'):
+  with brownie.reverts('One address can only mint 3 NFTs'):
     nftFactory.mint({'from': alice})
-  print(f'\tif alice mint again, she will got error: one address can only mint {nftFactory.balanceOf(alice)} nfts')
+  print(f'\tif alice mint again, she will got error: One address can only mint {nftFactory.balanceOf(alice)} NFTs')
 
   # day 4
   chain.sleep(ONE_DAY)
   chain.mine(1)
-  with brownie.reverts('one address can only mint 3 nfts'):
+  with brownie.reverts('One address can only mint 3 NFTs'):
     nftFactory.mint({'from': alice})
-  print(f'\tif alice mint again at today, she will got error: one address can only mint {nftFactory.balanceOf(alice)} nfts')
+  print(f'\tif alice mint again at today, she will got error: One address can only mint {nftFactory.balanceOf(alice)} NFTs')

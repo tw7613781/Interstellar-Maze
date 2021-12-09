@@ -14,15 +14,18 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract NFTFactory is ERC721, ReentrancyGuard, Ownable {
   uint256 public constant ONE_DAY = 86400;
   uint256 public constant TOTAL_RESERVE_NFTS = 150;
+  uint256 public constant TOTAL_USERS_NFTS = 849;
   uint256 public constant DAILY_RELEASE = 333;
-  uint256 public constant START_TIME = 1639044000;
+  uint256 public constant START_TIME = 1639062000; //1639062000
   uint256 private counter;
   uint256 private mintByOwner;
+  uint256 private mintByUser;
   mapping(address => uint256) private lockedAddress;
 
   constructor() ERC721("Interstellar Maze", "IM") {
     counter = 0;
     mintByOwner = 0;
+    mintByUser = 0;
   }
 
   /**
@@ -34,28 +37,32 @@ contract NFTFactory is ERC721, ReentrancyGuard, Ownable {
   function mint() public nonReentrant {
     require(
       counter < releasedNum(),
-      "mint more than released"
+      "Mint more than released"
     );
     if (_msgSender() == owner()) {
       require(
         mintByOwner < TOTAL_RESERVE_NFTS,
-        "mint more than reserved"
+        "Mint more than reserved for owner"
       );
       _safeMint(owner(), counter);
       counter += 1;
       mintByOwner += 1;
     } else {
       require(
-        balanceOf(_msgSender()) < 3,
-        "one address can only mint 3 nfts"
+        mintByUser < TOTAL_USERS_NFTS,
+        "Mint more than public released"
       );
       require(
-        lockedAddress[_msgSender()] == 0 ||
-            block.timestamp > lockedAddress[_msgSender()],
-        "the address is mint at today"
+        balanceOf(_msgSender()) < 3,
+        "One address can only mint 3 NFTs"
+      );
+      require(
+        block.timestamp > lockedAddress[_msgSender()],
+        "The address has minted today"
       );
       _safeMint(_msgSender(), counter);
       counter += 1;
+      mintByUser += 1;
       lockedAddress[_msgSender()] = ((block.timestamp - START_TIME) / ONE_DAY + 1) * ONE_DAY + START_TIME;
     }
   }
@@ -63,7 +70,7 @@ contract NFTFactory is ERC721, ReentrancyGuard, Ownable {
   function releasedNum() public view returns (uint256) {
     require(
       block.timestamp > START_TIME,
-      "the minting is not started yet"
+      "The minting is not started yet"
     );
     uint256 _totalRelease = ((block.timestamp - START_TIME) / ONE_DAY + 1) * DAILY_RELEASE;
     return _totalRelease > DAILY_RELEASE * 3 ? DAILY_RELEASE * 3 : _totalRelease;
