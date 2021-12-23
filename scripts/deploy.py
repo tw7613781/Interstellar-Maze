@@ -43,5 +43,3 @@ def main():
   ### Deployment ###
   interstellarMaze = InterstellarMaze.deploy({ 'from': acct, 'gas_price': gas_strategy })
   print(f'InterstellarMaze: { interstellarMaze }\n\n')
-
-  # set start time

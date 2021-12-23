@@ -4,16 +4,13 @@
 
 ## 铸造逻辑
  
-1: 一共999个，开发小组保留15%,共150个,其余任何人都可以mint,每人每天24小时只能mint 1个，总数最多3个。
+1. 一共6999个NFT
  
-2: 三天释放,每24小时释放333个NFT，3天全部释放完毕。
- 
-3: 北京时间2021年12月12日上午10点开始 - 1639274400
+2. 每个地址可以mint一个
+
+3. 支持白名单，而且白名单可以设置指定地址可以锻造次数
 
 同时每一个NTF在铸造的时候会生成一串32个bytes的hash,可以用于p5js生成NFT图像.
-
-举个例子,第三个NFT的hash
-0x57e4adbe45b9d6e661848636002dc8c472e921fa91d069285e5ccfe5aa2e2c0f.
 
 ## 其他方的工作(这里没有实现)
 
@@ -30,12 +27,6 @@ Mint事件的数据例子
 ```
 
 ## 讨论
-
-### block.timestamp vs block.number
-
-本合约使用block.timestamp来判断锁仓情况,具有block timestamp manipulation的潜在风险,请参考
-https://www.bookstack.cn/read/ethereumbook-en/spilt.14.c2a6b48ca6e1e33c.md
-但是考虑到目前并没有利益驱动,为了合约的简单性和时间的准确性,还是采用block.timestamp,而不是block.number,请悉知
 
 ### NFT的hash
 
