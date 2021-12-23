@@ -23,11 +23,11 @@ contract InterstellarMaze is ERC721, ReentrancyGuard, Ownable {
   uint256 private mintByUser;
   mapping(address => uint256) private locked;
 
-  event Mint(uint tokenId, address owner, bytes32 hash);
+  event Mint(uint256 tokenId, address owner, bytes32 hash);
 
   constructor() ERC721("Interstellar Maze", "IM") {}
 
-  function setStartTime(uint _startTime) public onlyOwner {
+  function setStartTime(uint256 _startTime) public onlyOwner {
     require(_startTime > block.timestamp, "Can only set future timestamp");
     startTime = _startTime;
   }
@@ -91,7 +91,7 @@ contract InterstellarMaze is ERC721, ReentrancyGuard, Ownable {
     return "https://www.btcart.cn/api/nft/";
   }
 
-  function _getHash(uint _counter, address _sender) internal view returns (bytes32) {
+  function _getHash(uint256 _counter, address _sender) internal view returns (bytes32) {
     return keccak256(abi.encodePacked(name(), _counter, block.number, _sender));
   }
 }
