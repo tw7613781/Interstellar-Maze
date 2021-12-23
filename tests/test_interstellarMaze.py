@@ -75,7 +75,6 @@ def test_release_num(interstellarMaze, admin):
   assert released == DAILY_RELEASE * 3
 
 def test_mint(interstellarMaze, admin, alice):
-  DAILY_RELEASE = 333
   ONE_DAY = 86400
   TOTAL_RESERVE_NFTS = 150
   START_TIME = chain.time() + ONE_DAY
@@ -133,3 +132,23 @@ def test_mint(interstellarMaze, admin, alice):
   with reverts('One address can only mint 3 NFTs'):
     interstellarMaze.mint({'from': alice})
   print(f'\tif alice mint again at today, she will got error: One address can only mint {interstellarMaze.balanceOf(alice)} NFTs')
+
+def test_mint_event(interstellarMaze, admin, alice):
+  ONE_DAY = 86400
+  START_TIME = chain.time() + ONE_DAY
+
+  interstellarMaze.setStartTime(START_TIME, {'from':admin})
+
+  print('\n')
+  
+  # time travel to the contract start time
+  # day 1
+  chain.mine(timedelta=ONE_DAY + 1)
+  # admin mint
+  tx = interstellarMaze.mint({'from': admin})
+  print(f'\ttx events {tx.events}')
+  assert tx.events['Mint']['owner'] == admin
+
+  tx = interstellarMaze.mint({'from': alice})
+  print(f'\ttx events {tx.events}')
+  assert tx.events['Mint']['owner'] == alice

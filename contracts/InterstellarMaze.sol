@@ -23,6 +23,8 @@ contract InterstellarMaze is ERC721, ReentrancyGuard, Ownable {
   uint256 private mintByUser;
   mapping(address => uint256) private locked;
 
+  event Mint(uint tokenId, address owner, bytes32 hash);
+
   constructor() ERC721("Interstellar Maze", "IM") {}
 
   function setStartTime(uint _startTime) public onlyOwner {
@@ -47,9 +49,10 @@ contract InterstellarMaze is ERC721, ReentrancyGuard, Ownable {
         mintByOwner < TOTAL_RESERVE_NFTS,
         "Mint more than reserved for owner"
       );
-      _safeMint(owner(), counter);
-      bytes32 hash = keccak256(abi.encodePacked(counter, block.number, _msgSender()));
-      tokenIdToHash[counter] = hash;
+      _safeMint(_msgSender(), counter);
+      bytes32 _hash = _getHash(counter, _msgSender());
+      tokenIdToHash[counter] = _hash;
+      emit Mint(counter, _msgSender(), _hash);
       counter += 1;
       mintByOwner += 1;
     } else {
@@ -66,8 +69,9 @@ contract InterstellarMaze is ERC721, ReentrancyGuard, Ownable {
         "The address has minted today"
       );
       _safeMint(_msgSender(), counter);
-      bytes32 hash = keccak256(abi.encodePacked(counter, block.number, _msgSender()));
-      tokenIdToHash[counter] = hash;
+      bytes32 _hash =_getHash(counter, _msgSender());
+      tokenIdToHash[counter] = _hash;
+      emit Mint(counter, _msgSender(), _hash);
       counter += 1;
       mintByUser += 1;
       locked[_msgSender()] = ((block.timestamp - startTime) / ONE_DAY + 1) * ONE_DAY + startTime;
@@ -85,5 +89,9 @@ contract InterstellarMaze is ERC721, ReentrancyGuard, Ownable {
 
   function _baseURI() internal pure override returns (string memory) {
     return "https://www.btcart.cn/api/nft/";
+  }
+
+  function _getHash(uint _counter, address _sender) internal view returns (bytes32) {
+    return keccak256(abi.encodePacked(name(), _counter, block.number, _sender));
   }
 }
