@@ -1,4 +1,4 @@
-from brownie import NFTFactory
+from brownie import InterstellarMaze
 ### Third-Party Packages ###
 from brownie.network import accounts, Chain
 from brownie.network.gas.strategies import ExponentialScalingStrategy
@@ -14,14 +14,14 @@ def main():
   chain: Chain  = Chain()
   print(f'Network Chain-ID: { chain }')
 
-  file_name = 'wallet.metamask.yml' 
+  file_name = 'wallet.personal_1.yml' 
   ### Load Mnemonic from YAML File ###
   try:
     with open(file_name) as f:
       content = safe_load(f)
       ### Read Mnemonic ###
-      mnemonic = content.get('mnemonic', None)
-      acct = accounts.from_mnemonic(mnemonic, count=1)
+      privkey = content.get('privkey', None)
+      acct = accounts.add(privkey)
   except FileNotFoundError:
     print(f'{TERM_RED}Cannot find wallet mnemonic file defined at `{file_name}`.{TERM_NFMT}')
     return
@@ -41,5 +41,7 @@ def main():
   gas_strategy = ExponentialScalingStrategy('3.5 gwei', '10 gwei')
 
   ### Deployment ###
-  nftFactory = NFTFactory.deploy({ 'from': acct, 'gas_price': gas_strategy })
-  print(f'\tNFTFactory: { nftFactory }\n\n')
+  interstellarMaze = InterstellarMaze.deploy({ 'from': acct, 'gas_price': gas_strategy })
+  print(f'InterstellarMaze: { interstellarMaze }\n\n')
+
+  # set start time
