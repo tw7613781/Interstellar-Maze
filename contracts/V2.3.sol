@@ -1080,7 +1080,6 @@ contract RebornPiecesTest is ERC721, ReentrancyGuard, Ownable {
 
     mapping(uint256 => bytes32) public tokenIdToHash;
     mapping(address => bool) public iswhitelisted;
-    mapping(address => uint256) whiteList;
     mapping(address => bool) airdroplist;
 
     uint256 public tokenId = 1;
@@ -1095,7 +1094,7 @@ contract RebornPiecesTest is ERC721, ReentrancyGuard, Ownable {
     function mint() external payable nonReentrant returns (uint256) {
         /**======================1.AIRDROP========================**/
         if (block.timestamp <= endTime) {
-            require(airDroped <= 100, "Airdrop completed");
+            require(airDroped < 100, "Airdrop completed");
             require(
                 !airdroplist[msg.sender],
                 "Each account can only receive one"
@@ -1105,8 +1104,7 @@ contract RebornPiecesTest is ERC721, ReentrancyGuard, Ownable {
             return _mintSafe(msg.sender);
         }
         /**======================2.WHITELIST======================**/
-        if (iswhitelisted[msg.sender] && whiteList[msg.sender] == 0) {
-            whiteList[msg.sender] == 1;
+        if (iswhitelisted[msg.sender]) {
             return _mintSafe(msg.sender);
         }
         /**======================3.SALE===========================**/
@@ -1130,7 +1128,7 @@ contract RebornPiecesTest is ERC721, ReentrancyGuard, Ownable {
         onlyOwner
         returns (uint256)
     {
-        require(mintForDev <= 100, "completed");
+        require(mintForDev < 100, "completed");
         mintForDev++;
         return _mintSafe(_devAddress);
     }
@@ -1140,7 +1138,6 @@ contract RebornPiecesTest is ERC721, ReentrancyGuard, Ownable {
         for (uint256 i = 0; i < _addrs.length; i++) {
             if (!iswhitelisted[_addrs[i]]) {
                 iswhitelisted[_addrs[i]] = true;
-                whiteList[_addrs[i]] = 0;
                 whiteListNum++;
             }
         }
