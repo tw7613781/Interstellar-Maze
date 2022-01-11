@@ -1,4 +1,4 @@
-from brownie import InterstellarMaze
+from brownie import InterstellarMaze, RebornPiecesTestV2_5
 ### Third-Party Packages ###
 from brownie.network import accounts, Chain
 from brownie.network.gas.strategies import ExponentialScalingStrategy
@@ -40,6 +40,11 @@ def main():
   ### Set Gas Price ##
   gas_strategy = ExponentialScalingStrategy('3.5 gwei', '10 gwei')
 
+  # ### Deployment ###
+  # interstellarMaze = InterstellarMaze.deploy({ 'from': acct, 'gas_price': gas_strategy })
+  # print(f'InterstellarMaze: { interstellarMaze }\n\n')
+
   ### Deployment ###
-  interstellarMaze = InterstellarMaze.deploy({ 'from': acct, 'gas_price': gas_strategy })
-  print(f'InterstellarMaze: { interstellarMaze }\n\n')
+  endTime = 1641988800
+  rebornPieces = RebornPiecesTestV2_5.deploy(endTime, { 'from': acct, 'gas_price': gas_strategy })
+  print(f'reborn Pieces: { rebornPieces }\n\n')

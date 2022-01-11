@@ -10,3 +10,6 @@ reports/
 !brownie-config.yml
 !environment.yml
 !networks.yml
+
+### nodejs
+node_modules
